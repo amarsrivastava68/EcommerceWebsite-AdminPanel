@@ -16,7 +16,7 @@ export const registerFormControls = [
         
     } , 
     {
-        name : 'Password' , 
+        name : 'password' , 
         label : 'password', 
         placeholder : 'Enter your password', 
         componentType  : 'input'  ,
@@ -35,7 +35,7 @@ export const loginFormControls = [
         
     } , 
     {
-        name : 'Password' , 
+        name : 'password' , 
         label : 'password', 
         placeholder : 'Enter your password', 
         componentType  : 'input'  ,
