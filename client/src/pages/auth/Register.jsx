@@ -4,12 +4,14 @@ import { registerUser } from "@/store/auth-slice";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 const Register = () => {
   const initialState = {
     userName: "",
     email: "",
     password: "",
   };
+  const { toast } = useToast();
   const [formData, setFormData] = useState(initialState);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -17,7 +19,12 @@ const Register = () => {
   function onSubmit(event) {
     event.preventDefault();
     dispatch(registerUser(formData)).then((data) => {
-      if (data?.payload?.success) navigate("/auth/login");
+      if (data?.payload?.success) {
+        toast({ title: data?.payload?.message });
+        navigate("/auth/login");
+      }else{
+        toast({ title: data?.payload?.message , variant : "destructive" });
+      }
     });
   }
   return (
