@@ -1,7 +1,3 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-import "./App.css";
 import AuthLayout from "./components/auth/layout";
 import { Routes, Route } from "react-router-dom";
 import Login from "./pages/auth/Login";
@@ -19,9 +15,16 @@ import ShoppingCheckout from "./pages/shopping-view/checkout";
 import ShoppingAccount from "./pages/shopping-view/account";
 import CheckAuth from "./components/common/check-auth";
 import UnAuthPage from "./pages/unauth-page";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { checkAuth } from "./store/auth-slice";
 function App() {
 const {isAuthenticated , user} = useSelector(state => state.auth)
+const dispatch = useDispatch()
+useEffect(()=> {
+  dispatch(checkAuth())
+} , [dispatch])
+
 console.log(user , isAuthenticated)
   return (
     <>
