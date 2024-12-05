@@ -19,17 +19,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { checkAuth } from "./store/auth-slice";
 function App() {
-const {isAuthenticated , user} = useSelector(state => state.auth)
+const {isAuthenticated ,isLoading ,  user} = useSelector(state => state.auth)
 const dispatch = useDispatch()
 useEffect(()=> {
   dispatch(checkAuth())
 } , [dispatch])
-
-console.log(user , isAuthenticated)
+if (isLoading )
+  return <div>Loading  .. .</div>
   return (
     <>
       <div className="flex flex-col bg-white overflow-hidden bg-white ">
-       
+      
         <Routes>
           <Route
             path="/auth"
