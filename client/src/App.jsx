@@ -18,6 +18,7 @@ import UnAuthPage from "./pages/unauth-page";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { checkAuth } from "./store/auth-slice";
+import { Skeleton } from "./components/ui/skeleton";
 function App() {
 const {isAuthenticated ,isLoading ,  user} = useSelector(state => state.auth)
 const dispatch = useDispatch()
@@ -25,7 +26,7 @@ useEffect(()=> {
   dispatch(checkAuth())
 } , [dispatch])
 if (isLoading )
-  return <div>Loading  .. .</div>
+  return <Skeleton className='w-full h-full bg-black '/>
   return (
     <>
       <div className="flex flex-col bg-white overflow-hidden bg-white ">
