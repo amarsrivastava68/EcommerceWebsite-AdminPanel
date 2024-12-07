@@ -1,13 +1,19 @@
-import { Label  , Button} from "@/components/ui/label";
-import React from "react";
+import { Label  } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import React, { useEffect } from "react";
+import axios from "axios";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { useRef } from "react";
-import { FileIcon, UploadCloudIcon } from "lucide-react";
+import { FileIcon, UploadCloudIcon ,  } from "lucide-react";
+import { XIcon } from "lucide-react";
 const ImageUpload = ({
   file,
   setFile,
-  uploadedImageUrl,
-  setUploadedImageUrl,
+  uploadImageUrl,
+  setUploadImageUrl,
+  setImageLoading , 
+  ImageLoading
 }) => {
   const inputref = useRef(null);
   function handleImageFileChange(event) {
@@ -30,6 +36,24 @@ const ImageUpload = ({
     const droppedFile = event.dataTransfer.files?.[0];
     if (droppedFile) setFile(droppedFile);
   }
+
+  async function uploadImagetoCloudinary() {
+    setImageLoading(true)
+    const data = new FormData
+    data.append('my_file' , file)
+    const response = await axios.post('http://localhost:5000/api/admin/products/upload-image' , data)
+    if (response.data?.success) setUploadImageUrl(response.data.result.url)
+      console.log(response.data.result.url) 
+    setImageLoading(false)}
+
+  useEffect(()=> {
+    if(file !== null)
+    {
+      uploadImagetoCloudinary ()
+
+    }
+
+  } , [file])
   return (
     <div className="w-full max-w-md mx-auto">
       <Label className=" text-lg font-semibold mb-2 block mt-4">
@@ -57,18 +81,19 @@ const ImageUpload = ({
             <span>click / drag and drop to upload</span>
           </Label>
         ) : (
-          <div className="flex items-center justify-between">
+           ImageLoading ? <Skeleton className='h-10 bg-gray-100'/>:
+         ( <div className="flex items-center justify-between">
             <div className="flex items-center ">
                 <FileIcon className="w-7 h-7 text-primary mr-2 "/>
 
             </div>
             <p className="text-small font-medium">{file.name}</p>
             <Button variant = "ghost" size="icon" className='text-muted-foreground  hover : text-foreground' onClick = {handleremoveimage}>
-                <Xicon className="w-4 h-4 "/>
-                <span className="sr">remove file </span>
+                <XIcon className="w-4 h-4 "/>
+                <span className="sr-only">remove file </span>
             </Button>
 
-          </div>
+          </div>)
         )}
       </div>
     </div>

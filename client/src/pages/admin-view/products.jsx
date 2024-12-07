@@ -1,9 +1,11 @@
- import React, { Fragment, useState } from 'react'
+ import React, { Fragment, useState  , useEffect} from 'react'
  import { Button } from '@/components/ui/button'
 import { Sheet, SheetHeader, SheetTitle , SheetContent } from '@/components/ui/sheet'
 import CommonForm from '@/components/common/form'
 import { addProductFormElements } from '@/config'
 import ImageUpload from './image-upload'
+import { useDispatch , useSelector } from 'react-redux'
+import { AddNewProduct, fetchAllProducts } from '@/store/admin/products-slice'
  const AdminProducts = () => {
   const initialFormData = {
     image : null , 
@@ -19,10 +21,24 @@ const [openCreateProductsDialog , setOpenCreateProductsDialog] = useState(false)
 const [formData , setFormData] = useState(initialFormData)
 const [imageFile , setimageFile ] = useState (null)
 const [uploadImageurl , setUploadImageUrl ] = useState('')
+const [ImageLoading , setImageLoading] = useState(false)
+const dispatch = useDispatch()
 
-function onSubmit () {
+const {productList} = useSelector(state => state.adminProducts)
+function onSubmit (event) {
+  event.preventDefault ()
+  dispatch(AddNewProduct({
+    ...formData , 
+    image : uploadImageurl
+  })).then(data => console.log(data))
 
 }
+useEffect(()=> { 
+  dispatch(fetchAllProducts())
+  console.log('inside useeffect')
+} , [dispatch])
+console.log(productList , uploadImageurl)
+
   return (
      <Fragment>
       <div className='mb-5 flex justify-end w-full'>
@@ -39,14 +55,14 @@ Add new Product
                   Add New Product 
                 </SheetTitle>
               </SheetHeader>
-              <ImageUpload file={imageFile} setFile = {setimageFile} uploadImageurl = {uploadImageurl} setUploadImageUrl = {setUploadImageUrl}/>
+              <ImageUpload file={imageFile} setFile = {setimageFile} uploadImageurl = {uploadImageurl} setUploadImageUrl = {setUploadImageUrl} ImageLoading={ImageLoading} setImageLoading = {setImageLoading}/>
       <div className='py-6'>
         <CommonForm
         formControls={addProductFormElements}
         formData={formData}
         setFormData={setFormData}
         buttonText='Add Product'
-
+        onSubmit={onSubmit}           
         >
 
         </CommonForm>
