@@ -6,6 +6,8 @@ import { addProductFormElements } from '@/config'
 import ImageUpload from './image-upload'
 import { useDispatch , useSelector } from 'react-redux'
 import { AddNewProduct, fetchAllProducts } from '@/store/admin/products-slice'
+import { useToast } from '@/hooks/use-toast'
+import AdminProductTile from '../../components/admin-view/product-tile'
  const AdminProducts = () => {
   const initialFormData = {
     image : null , 
@@ -22,15 +24,27 @@ const [formData , setFormData] = useState(initialFormData)
 const [imageFile , setimageFile ] = useState (null)
 const [uploadImageurl , setUploadImageUrl ] = useState('')
 const [ImageLoading , setImageLoading] = useState(false)
+const [currentEditedId , setcurrentEditedId] = useState(null)
 const dispatch = useDispatch()
-
+const {toast} = useToast()
 const {productList} = useSelector(state => state.adminProducts)
 function onSubmit (event) {
   event.preventDefault ()
   dispatch(AddNewProduct({
     ...formData , 
     image : uploadImageurl
-  })).then(data => console.log(data))
+  })).then(data => {
+    if(data?.payload?.success ){
+      dispatch(fetchAllProducts())
+      setOpenCreateProductsDialog(false)
+      setimageFile(null)
+      setFormData(initialFormData)
+      toast({
+        title :'product is added succssfully .'
+
+      })
+    }
+  })
 
 }
 useEffect(()=> { 
@@ -47,7 +61,15 @@ Add new Product
         </Button>
 
       </div>
-      <div className='grid gap-4 md:grid-cols-3 lg:grid-cols-4'></div>
+      <div className='grid gap-4 md:grid-cols-3 lg:grid-cols-4'>
+        {productList && productList.length >0 ?
+          
+          productList.map(product=> (
+             
+              <AdminProductTile product={product}/>
+          )):null
+        }
+      </div>
         <Sheet open={openCreateProductsDialog} onOpenChange = {()=> setOpenCreateProductsDialog(false)}>
           <SheetContent side = "right" className="overflow-auto ">
               <SheetHeader>
