@@ -13,7 +13,8 @@ const ImageUpload = ({
   uploadImageUrl,
   setUploadImageUrl,
   setImageLoading , 
-  ImageLoading
+  ImageLoading ,
+  isEditMode
 }) => {
   const inputref = useRef(null);
   function handleImageFileChange(event) {
@@ -42,6 +43,7 @@ const ImageUpload = ({
     const data = new FormData
     data.append('my_file' , file)
     const response = await axios.post('http://localhost:5000/api/admin/products/upload-image' , data)
+    console.log('this is url ' , response.data.result.url)
     if (response.data?.success) setUploadImageUrl(response.data.result.url)
       console.log(response.data.result.url) 
     setImageLoading(false)}
@@ -63,14 +65,15 @@ const ImageUpload = ({
       <div
         onDragOver={handleDragOver}
         onDrop={handleDrop}
-        className="border-2 border-dashed rounded-lg p-4 "
-      >
+        className={`${isEditMode ? 'opacity-60' :''} border-2 border-dashed rounded-lg p-4`}
+        >
         <Input
           id="image-upload"
           type="file"
           className=" hidden"
           ref={inputref}
           onChange={handleImageFileChange}
+          disabled  = {isEditMode}
         />
         {!file ? (
           <Label

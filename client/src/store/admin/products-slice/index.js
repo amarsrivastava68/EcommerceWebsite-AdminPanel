@@ -35,14 +35,19 @@ export const EditProduct  = createAsyncThunk('/products/editproduct' ,async ({id
     })
     return response?.data
 })
-export const DeleteProduct  = createAsyncThunk('/products/delete' ,async ({id , formData})=> {
-    const response  =await axios.delete(`http://localhost:5000/api/admin/products/add/${id}` , formData , {
-        headers : {
-            'Content-Type' : 'application/json'
-        }
-    })
-    return response?.data
-})
+export const DeleteProduct = createAsyncThunk('/products/delete', async (id) => {
+    try {
+      const response = await axios.delete(`http://localhost:5000/api/admin/products/delete/${id}`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      return response?.data;
+    } catch (error) {
+      throw error.response?.data || error.message;
+    }
+  });
+  
 const AdminProductsSlice = createSlice({
     name: "adminProducts",
     initialState,
