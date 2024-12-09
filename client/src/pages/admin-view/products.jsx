@@ -18,7 +18,7 @@ import {
 } from "@/store/admin/products-slice";
 import { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import ImageUpload from "./image-upload";
+import ImageUpload from "../../components/admin-view/image-upload";
 import { useToast } from "@/hooks/use-toast";
 
 const initialFormData = {
